@@ -23,13 +23,13 @@ class DoorHook(VecTask):
 
         self.cfg = cfg
         self.n = 0
-        self.max_episode_length = 150 # 300
+        self.max_episode_length = 300 # 300 dataset 1
 
-        self.door_scale_param = 0.20
+        self.door_scale_param = 0.2
 
         self.action_scale = 1.5
-        self.start_pos_noise_scale =  0.5
-        self.start_rot_noise_scale =   0.25
+        self.start_pos_noise_scale =  0.5 # 0.5
+        self.start_rot_noise_scale =   0.25  # 0.25
 
         self.aggregate_mode = 3
 
@@ -46,7 +46,7 @@ class DoorHook(VecTask):
 
         # self.distX_offset = 0.04 # 0.04 default
         
-        self.dt = 1/20  # edited
+        self.dt = 1/60  # edited
 
         # set camera properties for realsense now : 435 and 405
         self.camera_props = gymapi.CameraProperties()
@@ -201,7 +201,7 @@ class DoorHook(VecTask):
     
         # start pose
         ur3_start_pose = gymapi.Transform()
-        ur3_start_pose.p = gymapi.Vec3(0.7, 0.0, 1.1) # initial position of the robot # 0.5 0.0 1.02 right + left -
+        ur3_start_pose.p = gymapi.Vec3(0.5, 0.0, 1.1) # initial position of the robot # 0.5 0.0 1.02 right + left -
         ur3_start_pose.r = gymapi.Quat.from_euler_zyx(0, 0, 3.14159)
 
         door_start_pose = gymapi.Transform()
@@ -367,7 +367,7 @@ class DoorHook(VecTask):
     def get_d_img_dataset(self):
 
         for z in range(self.num_envs):
-            torch.save(self.pp_d_imgs[z, :], f'../../depthnet/depth_dataset_v4/trash_{self.n}_{z}.d_img')
+            torch.save(self.pp_d_imgs[z, :], f'../../depthnet/depth_dataset_ur3_devel/side_{self.n}_{z}.d_img')
         self.n = self.n + 1
 
     def compute_observations(self): 
@@ -421,15 +421,15 @@ class DoorHook(VecTask):
 
         pos = torch.zeros(env_ids.shape[0], 6).to(self.device)
 
-        # # both side 
-        # left_mask = (env_ids % 2 == 0)
-        # right_mask = ~left_mask
+        # both side 
+        left_mask = (env_ids % 2 == 0)
+        right_mask = ~left_mask
 
-        # left_default_pos = self.ur3_default_dof_pos_left.unsqueeze(0).expand(len(env_ids), -1)
-        # right_default_pos = self.ur3_default_dof_pos_right.unsqueeze(0).expand(len(env_ids), -1)
+        left_default_pos = self.ur3_default_dof_pos_left.unsqueeze(0).expand(len(env_ids), -1)
+        right_default_pos = self.ur3_default_dof_pos_right.unsqueeze(0).expand(len(env_ids), -1)
 
-        # pos[left_mask] = left_default_pos[left_mask] + torch.cat([rand_pos[left_mask], rand_rot[left_mask]], dim=-1)
-        # pos[right_mask] = right_default_pos[right_mask] + torch.cat([rand_pos[right_mask], rand_rot[right_mask]], dim=-1)
+        pos[left_mask] = left_default_pos[left_mask] + torch.cat([rand_pos[left_mask], rand_rot[left_mask]], dim=-1)
+        pos[right_mask] = right_default_pos[right_mask] + torch.cat([rand_pos[right_mask], rand_rot[right_mask]], dim=-1)
 
         
         # print(f'Left count: {left_mask.sum().item()}, Right count: {right_mask.sum().item()}')
@@ -438,8 +438,8 @@ class DoorHook(VecTask):
         # pos = self.ur3_default_dof_pos_right.unsqueeze(0) + torch.cat([rand_pos , rand_rot], dim=-1)
         # pos[0::2] = self.ur3_default_dof_pos_left + torch.cat([rand_pos[0::2], rand_rot[0::2]], dim=-1)
 
-        # mid
-        pos = self.ur3_default_dof_pos_mid.unsqueeze(0) + torch.cat([rand_pos , rand_rot], dim=-1)
+        # # mid
+        # pos = self.ur3_default_dof_pos_mid.unsqueeze(0) + torch.cat([rand_pos , rand_rot], dim=-1)
 
         # with limit
         # pos = tensor_clamp(
