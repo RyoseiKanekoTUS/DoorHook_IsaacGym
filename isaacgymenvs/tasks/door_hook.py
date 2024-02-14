@@ -52,8 +52,8 @@ class DoorHook(VecTask):
         self.camera_props = gymapi.CameraProperties()
         self.camera_props.width = 64
         self.camera_props.height = 48
-        self.depth_min = -0.5
-        self.depth_max = -0.07 # 435 : -0.18- -3.0
+        self.depth_min = -0.5  # 405 : -0.07 - -0.5
+        self.depth_max = -0.07 # 435 : -0.18 - -3.0
 
         self.camera_props.enable_tensors = True # If False, d_img process doesnt work  
 
@@ -471,7 +471,7 @@ class DoorHook(VecTask):
         
     def pre_physics_step(self, actions): # self.gym.set_dof_target_tensor()
         self.actions = actions.clone().to(self.device)
-        # print('self.actions',self.actions)
+        print('self.actions',self.actions)
         # self.actions = self.zero_actions()
         # self.actions = self.uni_actions()
         # print('self.actions', self.actions) # for debug
