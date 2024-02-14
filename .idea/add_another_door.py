@@ -68,7 +68,7 @@ asset_root = "../assets"
 door_1 = "urdf/door_test/door_1_wall.urdf"
 door_2 = 'urdf/door_test/door_2_wall.urdf'
 door_1_inv = 'urdf/door_test/door_1_inv_wall_2.urdf'
-door_2_inv = 'urdf/door_test/door_2_inv_wall.urdf'
+door_2_inv = 'urdf/door_test/door_2_inv_wall_2.urdf'
 
 asset_options = gymapi.AssetOptions()
 asset_options.fix_base_link = True

@@ -127,7 +127,7 @@ class DoorHook(VecTask):
         door_2_asset_file = 'urdf/door_test/door_2_wall.urdf'
         # door_1_inv_asset_file = 'urdf/door_test/door_1_inv_wall.urdf'
         door_1_inv_asset_file = 'urdf/door_test/door_1_inv_wall_2.urdf'
-        door_2_inv_asset_file = 'urdf/door_test/door_2_inv_wall.urdf'
+        door_2_inv_asset_file = 'urdf/door_test/door_2_inv_wall_2.urdf'
 
         
         # load ur3 asset
@@ -472,7 +472,7 @@ class DoorHook(VecTask):
         
     def pre_physics_step(self, actions): # self.gym.set_dof_target_tensor()
         self.actions = actions.clone().to(self.device)
-        print('self.actions',self.actions)
+        # print('self.actions',self.actions)
         # self.actions = self.zero_actions()
         # self.actions = self.uni_actions()
         # print('self.actions', self.actions) # for debug
