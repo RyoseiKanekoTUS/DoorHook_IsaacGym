@@ -23,13 +23,13 @@ class DoorHook(VecTask):
 
         self.cfg = cfg
         self.n = 0
-        self.max_episode_length = 300 # 300 dataset 1
+        self.max_episode_length = 1 # 300 dataset 1
 
-        self.door_scale_param = 0.2
+        self.door_scale_param = 0.25 # 0.2
 
         self.action_scale = 1.5
-        self.start_pos_noise_scale =  0.5 # 0.5
-        self.start_rot_noise_scale =   0.25  # 0.25
+        self.start_pos_noise_scale =  0.2 # 0.5
+        self.start_rot_noise_scale =   0.2  # 0.25
 
         self.aggregate_mode = 3
 
@@ -202,7 +202,7 @@ class DoorHook(VecTask):
     
         # start pose
         ur3_start_pose = gymapi.Transform()
-        ur3_start_pose.p = gymapi.Vec3(0.3, 0.0, 1.1) # initial position of the robot # 0.5 0.0 1.02 right + left -
+        ur3_start_pose.p = gymapi.Vec3(0.2, 0.0, 1.05) # initial position of the robot # 0.5 0.0 1.02 right + left -
         ur3_start_pose.r = gymapi.Quat.from_euler_zyx(0, 0, 3.14159)
 
         door_start_pose = gymapi.Transform()
@@ -245,14 +245,14 @@ class DoorHook(VecTask):
                                                                                                 # ↑self collision ON
             self.gym.set_actor_dof_properties(env_ptr, ur3_actor, ur3_dof_props)
 
-            # # create door actors # all doors ------------------------------------------
-            # if door_asset_count == 3:
-            #     door_actor = self.gym.create_actor(env_ptr, door_assets[door_asset_count], door_start_pose, "door", i, 0, 0)
-            #     door_asset_count = 0
-            # else:
-            #     door_actor = self.gym.create_actor(env_ptr, door_assets[door_asset_count], door_start_pose, "door", i, 0, 0)
-            #     door_asset_count += 1
-            # # -------------------------------------------------------------------------
+            # create door actors # all doors ------------------------------------------
+            if door_asset_count == 3:
+                door_actor = self.gym.create_actor(env_ptr, door_assets[door_asset_count], door_start_pose, "door", i, 0, 0)
+                door_asset_count = 0
+            else:
+                door_actor = self.gym.create_actor(env_ptr, door_assets[door_asset_count], door_start_pose, "door", i, 0, 0)
+                door_asset_count += 1
+            # -------------------------------------------------------------------------
                 
             # # only left hinge ---------------------------------------------------------
             # if i % 2 == 0:
@@ -261,12 +261,12 @@ class DoorHook(VecTask):
             #     door_actor = self.gym.create_actor(env_ptr, door_assets[3], door_start_pose, "door", i, 0, 0)
             # # -------------------------------------------------------------------------
                 
-            # only rihgt hinge ---------------------------------------------------------
-            if i % 2 == 0:
-                door_actor = self.gym.create_actor(env_ptr, door_assets[0], door_start_pose, "door", i, 0, 0)
-            else:
-                door_actor = self.gym.create_actor(env_ptr, door_assets[2], door_start_pose, "door", i, 0, 0)
-            # -------------------------------------------------------------------------
+            # # only rihgt hinge ---------------------------------------------------------
+            # if i % 2 == 0:
+            #     door_actor = self.gym.create_actor(env_ptr, door_assets[0], door_start_pose, "door", i, 0, 0)
+            # else:
+            #     door_actor = self.gym.create_actor(env_ptr, door_assets[2], door_start_pose, "door", i, 0, 0)
+            # # -------------------------------------------------------------------------
                 
             self.gym.set_actor_dof_properties(env_ptr, door_actor, door_dof_props)
             #door size randomization
@@ -368,7 +368,7 @@ class DoorHook(VecTask):
     def get_d_img_dataset(self):
 
         for z in range(self.num_envs):
-            torch.save(self.pp_d_imgs[z, :], f'../../depthnet/depth_dataset_ur3_405/mid_{self.n}_{z}.d_img')
+            torch.save(self.pp_d_imgs[z, :], f'../../depthnet/depth_dataset_ur3_405/sides_{self.n}_{z}.d_img')
         self.n = self.n + 1
 
     def compute_observations(self): 
@@ -422,22 +422,22 @@ class DoorHook(VecTask):
 
         pos = torch.zeros(env_ids.shape[0], 6).to(self.device)
 
-        # # both side ###################################################################################################
-        # left_mask = (env_ids % 2 == 0)
-        # right_mask = ~left_mask
+        # both side ###################################################################################################
+        left_mask = (env_ids % 2 == 0)
+        right_mask = ~left_mask
 
-        # left_default_pos = self.ur3_default_dof_pos_left.unsqueeze(0).expand(len(env_ids), -1)
-        # right_default_pos = self.ur3_default_dof_pos_right.unsqueeze(0).expand(len(env_ids), -1)
+        left_default_pos = self.ur3_default_dof_pos_left.unsqueeze(0).expand(len(env_ids), -1)
+        right_default_pos = self.ur3_default_dof_pos_right.unsqueeze(0).expand(len(env_ids), -1)
 
-        # pos[left_mask] = left_default_pos[left_mask] + torch.cat([rand_pos[left_mask], rand_rot[left_mask]], dim=-1)
-        # pos[right_mask] = right_default_pos[right_mask] + torch.cat([rand_pos[right_mask], rand_rot[right_mask]], dim=-1)
+        pos[left_mask] = left_default_pos[left_mask] + torch.cat([rand_pos[left_mask], rand_rot[left_mask]], dim=-1)
+        pos[right_mask] = right_default_pos[right_mask] + torch.cat([rand_pos[right_mask], rand_rot[right_mask]], dim=-1)
 
         ###############################################################################################################
         
-        # # only left ###################################################################################################
-        pos = self.ur3_default_dof_pos_left.unsqueeze(0) + torch.cat([rand_pos , rand_rot], dim=-1)
-        pos[0::2] = self.ur3_default_dof_pos_left + torch.cat([rand_pos[0::2], rand_rot[0::2]], dim=-1)
-        ################################################################################################################
+        # # # only left ###################################################################################################
+        # pos = self.ur3_default_dof_pos_left.unsqueeze(0) + torch.cat([rand_pos , rand_rot], dim=-1)
+        # pos[0::2] = self.ur3_default_dof_pos_left + torch.cat([rand_pos[0::2], rand_rot[0::2]], dim=-1)
+        # ################################################################################################################
 
         # # mid ########################################################################################################
         # pos = self.ur3_default_dof_pos_mid.unsqueeze(0) + torch.cat([rand_pos , rand_rot], dim=-1)
