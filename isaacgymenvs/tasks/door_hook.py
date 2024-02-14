@@ -433,14 +433,15 @@ class DoorHook(VecTask):
         # pos[right_mask] = right_default_pos[right_mask] + torch.cat([rand_pos[right_mask], rand_rot[right_mask]], dim=-1)
 
         ###############################################################################################################
-        # print(f'Left count: {left_mask.sum().item()}, Right count: {right_mask.sum().item()}')
-
-        ### only left ###################################################################################################
+        
+        # # only left ###################################################################################################
         pos = self.ur3_default_dof_pos_left.unsqueeze(0) + torch.cat([rand_pos , rand_rot], dim=-1)
         pos[0::2] = self.ur3_default_dof_pos_left + torch.cat([rand_pos[0::2], rand_rot[0::2]], dim=-1)
+        ################################################################################################################
 
-        # # mid
+        # # mid ########################################################################################################
         # pos = self.ur3_default_dof_pos_mid.unsqueeze(0) + torch.cat([rand_pos , rand_rot], dim=-1)
+        # ###############################################################################################################
 
         # with limit
         # pos = tensor_clamp(
