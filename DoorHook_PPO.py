@@ -88,19 +88,22 @@ class PPOnet(GaussianMixin, DeterministicMixin, Model):
         #             nn.ELU()
         #             )        
         self.d_feture_extractor = nn.Sequential(nn.Conv2d(1, 4, kernel_size=5, stride=1, padding=2), # 4, 48, 64
-                                     nn.Conv2d(4, 4, kernel_size=5, stride=1, padding=2), # 4, 48, 64
-                                     nn.ReLU(),
-                                     nn.MaxPool2d(2, stride=2, padding=1), #  8, 25, 33
-                                     nn.Conv2d(4, 8, kernel_size=5, stride=1, padding=2), # 16, 18, 26
-                                     nn.Conv2d(8, 8, kernel_size=5, stride=1, padding=2), # 8, 25, 33
-                                     nn.ReLU(),
-                                     nn.MaxPool2d(2, stride=2, padding=1), # 8, 13, 17
-                                     nn.Conv2d(8, 16, kernel_size=3, padding=1), # 32, 13, 17
-                                     nn.Conv2d(16, 16, kernel_size=3, padding=1), # 16, 13, 17
-                                     nn.MaxPool2d(2, stride=2), # 16, 6, 8
-                                     nn.ReLU(),
-                                     nn.Flatten()
-                                     )
+                                                nn.ReLU(),
+                                                nn.Conv2d(4, 4, kernel_size=5, stride=1, padding=2), # 4, 48, 64
+                                                nn.ReLU(),
+                                                nn.MaxPool2d(2, stride=2, padding=1), #  8, 25, 33
+                                                nn.Conv2d(4, 8, kernel_size=5, stride=1, padding=2), # 16, 18, 26
+                                                nn.ReLU(),
+                                                nn.Conv2d(8, 8, kernel_size=5, stride=1, padding=2), # 8, 25, 33
+                                                nn.ReLU(),
+                                                nn.MaxPool2d(2, stride=2, padding=1), # 8, 13, 17
+                                                nn.Conv2d(8, 16, kernel_size=3, padding=1), # 32, 13, 17
+                                                nn.ReLU(),
+                                                nn.Conv2d(16, 16, kernel_size=3, padding=1), # 16, 13, 17
+                                                nn.MaxPool2d(2, stride=2), # 16, 6, 8
+                                                nn.ReLU(),
+                                                nn.Flatten()
+                                                )
         self.mlp = nn.Sequential(nn.Linear((12+768), 512),
             nn.ELU(),
             nn.Linear(512, 256),
@@ -229,11 +232,11 @@ if __name__ == '__main__':
 
     path = None
     # path = '../../learning_data/DoorHook/post_graduation/0214_UR3_devel/agent_29000.pt'
-    path = 'skrl_runs/DoorHook/conv_ppo/24-02-14_13-33-30-805608_PPO/checkpoints/agent_28000.pt'
+    # path = 'skrl_runs/DoorHook/conv_ppo/24-02-14_13-33-30-805608_PPO/checkpoints/agent_28000.pt'
     
     DoorHookTrainer = DoorHookTrainer()
-    DoorHookTrainer.eval(path)
-    # DoorHookTrainer.train(path)
+    # DoorHookTrainer.eval(path)
+    DoorHookTrainer.train(path)
 
 
 
