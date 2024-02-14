@@ -368,7 +368,7 @@ class DoorHook(VecTask):
     def get_d_img_dataset(self):
 
         for z in range(self.num_envs):
-            torch.save(self.pp_d_imgs[z, :], f'../../depthnet/depth_dataset_ur3_devel/side_{self.n}_{z}.d_img')
+            torch.save(self.pp_d_imgs[z, :], f'../../depthnet/depth_dataset_ur3_405/mid_{self.n}_{z}.d_img')
         self.n = self.n + 1
 
     def compute_observations(self): 
