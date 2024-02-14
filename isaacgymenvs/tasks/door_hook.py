@@ -52,8 +52,8 @@ class DoorHook(VecTask):
         self.camera_props = gymapi.CameraProperties()
         self.camera_props.width = 64
         self.camera_props.height = 48
-        self.depth_min = -3.0
-        self.depth_max = -0.18
+        self.depth_min = -0.5
+        self.depth_max = -0.07 # 435 : -0.18- -3.0
 
         self.camera_props.enable_tensors = True # If False, d_img process doesnt work  
 
@@ -125,7 +125,8 @@ class DoorHook(VecTask):
         ur3_asset_file = "urdf/door_test/hook_test.urdf"
         door_1_asset_file = 'urdf/door_test/door_1_wall.urdf'
         door_2_asset_file = 'urdf/door_test/door_2_wall.urdf'
-        door_1_inv_asset_file = 'urdf/door_test/door_1_inv_wall.urdf'
+        # door_1_inv_asset_file = 'urdf/door_test/door_1_inv_wall.urdf'
+        door_1_inv_asset_file = 'urdf/door_test/door_1_inv_wall_2.urdf'
         door_2_inv_asset_file = 'urdf/door_test/door_2_inv_wall.urdf'
 
         
@@ -244,14 +245,14 @@ class DoorHook(VecTask):
                                                                                                 # ↑self collision ON
             self.gym.set_actor_dof_properties(env_ptr, ur3_actor, ur3_dof_props)
 
-            # create door actors # all doors ------------------------------------------
-            if door_asset_count == 3:
-                door_actor = self.gym.create_actor(env_ptr, door_assets[door_asset_count], door_start_pose, "door", i, 0, 0)
-                door_asset_count = 0
-            else:
-                door_actor = self.gym.create_actor(env_ptr, door_assets[door_asset_count], door_start_pose, "door", i, 0, 0)
-                door_asset_count += 1
-            # -------------------------------------------------------------------------
+            # # create door actors # all doors ------------------------------------------
+            # if door_asset_count == 3:
+            #     door_actor = self.gym.create_actor(env_ptr, door_assets[door_asset_count], door_start_pose, "door", i, 0, 0)
+            #     door_asset_count = 0
+            # else:
+            #     door_actor = self.gym.create_actor(env_ptr, door_assets[door_asset_count], door_start_pose, "door", i, 0, 0)
+            #     door_asset_count += 1
+            # # -------------------------------------------------------------------------
                 
             # # only left hinge ---------------------------------------------------------
             # if i % 2 == 0:
@@ -260,12 +261,12 @@ class DoorHook(VecTask):
             #     door_actor = self.gym.create_actor(env_ptr, door_assets[3], door_start_pose, "door", i, 0, 0)
             # # -------------------------------------------------------------------------
                 
-            # # only rihgt hinge ---------------------------------------------------------
-            # if i % 2 == 0:
-            #     door_actor = self.gym.create_actor(env_ptr, door_assets[0], door_start_pose, "door", i, 0, 0)
-            # else:
-            #     door_actor = self.gym.create_actor(env_ptr, door_assets[2], door_start_pose, "door", i, 0, 0)
-            # # -------------------------------------------------------------------------
+            # only rihgt hinge ---------------------------------------------------------
+            if i % 2 == 0:
+                door_actor = self.gym.create_actor(env_ptr, door_assets[0], door_start_pose, "door", i, 0, 0)
+            else:
+                door_actor = self.gym.create_actor(env_ptr, door_assets[2], door_start_pose, "door", i, 0, 0)
+            # -------------------------------------------------------------------------
                 
             self.gym.set_actor_dof_properties(env_ptr, door_actor, door_dof_props)
             #door size randomization
@@ -421,22 +422,22 @@ class DoorHook(VecTask):
 
         pos = torch.zeros(env_ids.shape[0], 6).to(self.device)
 
-        # both side 
-        left_mask = (env_ids % 2 == 0)
-        right_mask = ~left_mask
+        # # both side ###################################################################################################
+        # left_mask = (env_ids % 2 == 0)
+        # right_mask = ~left_mask
 
-        left_default_pos = self.ur3_default_dof_pos_left.unsqueeze(0).expand(len(env_ids), -1)
-        right_default_pos = self.ur3_default_dof_pos_right.unsqueeze(0).expand(len(env_ids), -1)
+        # left_default_pos = self.ur3_default_dof_pos_left.unsqueeze(0).expand(len(env_ids), -1)
+        # right_default_pos = self.ur3_default_dof_pos_right.unsqueeze(0).expand(len(env_ids), -1)
 
-        pos[left_mask] = left_default_pos[left_mask] + torch.cat([rand_pos[left_mask], rand_rot[left_mask]], dim=-1)
-        pos[right_mask] = right_default_pos[right_mask] + torch.cat([rand_pos[right_mask], rand_rot[right_mask]], dim=-1)
+        # pos[left_mask] = left_default_pos[left_mask] + torch.cat([rand_pos[left_mask], rand_rot[left_mask]], dim=-1)
+        # pos[right_mask] = right_default_pos[right_mask] + torch.cat([rand_pos[right_mask], rand_rot[right_mask]], dim=-1)
 
-        
+        ###############################################################################################################
         # print(f'Left count: {left_mask.sum().item()}, Right count: {right_mask.sum().item()}')
 
-
-        # pos = self.ur3_default_dof_pos_right.unsqueeze(0) + torch.cat([rand_pos , rand_rot], dim=-1)
-        # pos[0::2] = self.ur3_default_dof_pos_left + torch.cat([rand_pos[0::2], rand_rot[0::2]], dim=-1)
+        ### only left ###################################################################################################
+        pos = self.ur3_default_dof_pos_left.unsqueeze(0) + torch.cat([rand_pos , rand_rot], dim=-1)
+        pos[0::2] = self.ur3_default_dof_pos_left + torch.cat([rand_pos[0::2], rand_rot[0::2]], dim=-1)
 
         # # mid
         # pos = self.ur3_default_dof_pos_mid.unsqueeze(0) + torch.cat([rand_pos , rand_rot], dim=-1)
