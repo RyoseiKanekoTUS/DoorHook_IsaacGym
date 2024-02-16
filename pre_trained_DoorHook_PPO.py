@@ -22,19 +22,25 @@ class PPOnet(GaussianMixin, DeterministicMixin, Model):
         DeterministicMixin.__init__(self, clip_actions)
         GaussianMixin.__init__(self, clip_actions, clip_log_std, min_log_std, max_log_std, reduction)
 
-# # NW 4_1
-#         self.d_feture_extractor = nn.Sequential(nn.Conv2d(1, 4, kernel_size=9, stride=1, padding=1), # 4, 42, 58 
-#                                 nn.ReLU(),
-#                                 nn.MaxPool2d(2, stride=2, padding=1), #  4, 22, 30
-#                                 nn.Conv2d(4, 8, kernel_size=7, stride=1, padding=1), # 16, 18, 26
-#                                 nn.ReLU(),
-#                                 nn.MaxPool2d(2, stride=2, padding=1), # 8, 10, 14
-#                                 nn.Conv2d(8, 16, kernel_size=5, padding=1), # 16, 8, 12
-#                                 nn.ReLU(),
-#                                 nn.Flatten()
-#                                 )
+        self.d_feture_extractor = nn.Sequential(nn.Conv2d(1, 4, kernel_size=5, stride=1, padding=2), # 4, 48, 64
+                                                nn.ReLU(),
+                                     nn.Conv2d(4, 4, kernel_size=5, stride=1, padding=2), # 4, 48, 64
+                                     nn.ReLU(),
+                                     nn.MaxPool2d(2, stride=2, padding=1), #  8, 25, 33
+                                     nn.Conv2d(4, 8, kernel_size=5, stride=1, padding=2), # 16, 18, 26
+                                     nn.ReLU(),
+                                     nn.Conv2d(8, 8, kernel_size=5, stride=1, padding=2), # 8, 25, 33
+                                     nn.ReLU(),
+                                     nn.MaxPool2d(2, stride=2, padding=1), # 8, 13, 17
+                                     nn.Conv2d(8, 16, kernel_size=3, padding=1), # 32, 13, 17
+                                     nn.ReLU(),
+                                     nn.Conv2d(16, 16, kernel_size=3, padding=1), # 16, 13, 17
+                                     nn.MaxPool2d(2, stride=2), # 16, 6, 8
+                                     nn.ReLU(),
+                                     nn.Flatten()
+                                     )
         
-        self.d_feture_extractor = torch.load('../../learning_data/depthnet/post_graduation/UR3_405/encoder255.pt', map_location=self.device)
+        # self.d_feture_extractor = torch.load('../../learning_data/depthnet/post_graduation/UR3_405/encoder255.pt', map_location=self.device)
         # self.d_feture_extractor.parameters().require_grad = False
         self.mlp = nn.Sequential(nn.Linear((12+768), 512),
                     nn.ELU(),
@@ -157,12 +163,12 @@ class DoorHookTrainer(PPOnet):
 if __name__ == '__main__':
 
     path = None
-    # path = 'skrl_runs/DoorHook/conv_ppo/24-01-16_21-40-21-566265_PPO/checkpoints/best_agent.pt'
+    path = 'skrl_runs/DoorHook/conv_ppo/24-02-14_22-52-10-711853_PPO_levorg_pre_bad/checkpoints/best_agent.pt'
     
     DoorHookTrainer = DoorHookTrainer()
     # DoorHookTrainer.models['policy'].d_feture_extractor.requires_grad = False
-    # DoorHookTrainer.eval(path)
-    DoorHookTrainer.train(path)
+    DoorHookTrainer.eval(path)
+    # DoorHookTrainer.train(path)
 
 
 
