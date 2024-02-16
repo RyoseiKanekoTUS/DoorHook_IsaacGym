@@ -34,7 +34,7 @@ class PPOnet(GaussianMixin, DeterministicMixin, Model):
 #                                 nn.Flatten()
 #                                 )
         
-        self.d_feture_extractor = torch.load('../../learning_data/depthnet/5_1_best_/encoder60.pt', map_location=self.device)
+        self.d_feture_extractor = torch.load('../../learning_data/depthnet/post_graduation/UR3_405/encoder255.pt', map_location=self.device)
         # self.d_feture_extractor.parameters().require_grad = False
         self.mlp = nn.Sequential(nn.Linear((12+768), 512),
                     nn.ELU(),

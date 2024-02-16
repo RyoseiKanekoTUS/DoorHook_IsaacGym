@@ -229,7 +229,7 @@ if __name__ == '__main__':
 
     path = None
     # path = '../../learning_data/DoorHook/post_graduation/0214_UR3_devel/agent_29000.pt'
-    path = 'skrl_runs/DoorHook/conv_ppo/24-02-14_13-33-30-805608_PPO/checkpoints/agent_28000.pt'
+    path = 'skrl_runs/DoorHook/conv_ppo/24-02-14_13-33-30-805608_PPO_UR3_devel_left_additional/checkpoints/best_agent.pt'
     
     DoorHookTrainer = DoorHookTrainer()
     DoorHookTrainer.eval(path)
