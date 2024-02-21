@@ -52,7 +52,7 @@ class DoorHook(VecTask):
         self.camera_props = gymapi.CameraProperties()
         self.camera_props.width = 64
         self.camera_props.height = 48
-        self.depth_min = -0.5  # 405 : -0.07 - -0.5
+        self.depth_min = -3.0  # 405 : -0.07 - -0.5
         self.depth_max = -0.07 # 435 : -0.18 - -3.0
 
         self.camera_props.enable_tensors = True # If False, d_img process doesnt work  
@@ -202,7 +202,7 @@ class DoorHook(VecTask):
     
         # start pose
         ur3_start_pose = gymapi.Transform()
-        ur3_start_pose.p = gymapi.Vec3(0.5, 0.0, 1.1) # initial position of the robot # 0.5 0.0 1.02 right + left -
+        ur3_start_pose.p = gymapi.Vec3(0.75, 0.0, 1.1) # initial position of the robot # 0.5 0.0 1.02 right + left -
         ur3_start_pose.r = gymapi.Quat.from_euler_zyx(0, 0, 3.14159)
 
         door_start_pose = gymapi.Transform()
@@ -422,15 +422,15 @@ class DoorHook(VecTask):
 
         pos = torch.zeros(env_ids.shape[0], 6).to(self.device)
 
-        # both side ###################################################################################################
-        left_mask = (env_ids % 2 == 0)
-        right_mask = ~left_mask
+        # # both side ###################################################################################################
+        # left_mask = (env_ids % 2 == 0)
+        # right_mask = ~left_mask
 
-        left_default_pos = self.ur3_default_dof_pos_left.unsqueeze(0).expand(len(env_ids), -1)
-        right_default_pos = self.ur3_default_dof_pos_right.unsqueeze(0).expand(len(env_ids), -1)
+        # left_default_pos = self.ur3_default_dof_pos_left.unsqueeze(0).expand(len(env_ids), -1)
+        # right_default_pos = self.ur3_default_dof_pos_right.unsqueeze(0).expand(len(env_ids), -1)
 
-        pos[left_mask] = left_default_pos[left_mask] + torch.cat([rand_pos[left_mask], rand_rot[left_mask]], dim=-1)
-        pos[right_mask] = right_default_pos[right_mask] + torch.cat([rand_pos[right_mask], rand_rot[right_mask]], dim=-1)
+        # pos[left_mask] = left_default_pos[left_mask] + torch.cat([rand_pos[left_mask], rand_rot[left_mask]], dim=-1)
+        # pos[right_mask] = right_default_pos[right_mask] + torch.cat([rand_pos[right_mask], rand_rot[right_mask]], dim=-1)
 
         ###############################################################################################################
         
@@ -439,9 +439,9 @@ class DoorHook(VecTask):
         # pos[0::2] = self.ur3_default_dof_pos_left + torch.cat([rand_pos[0::2], rand_rot[0::2]], dim=-1)
         # ################################################################################################################
 
-        # # mid ########################################################################################################
-        # pos = self.ur3_default_dof_pos_mid.unsqueeze(0) + torch.cat([rand_pos , rand_rot], dim=-1)
-        # ###############################################################################################################
+        # mid ########################################################################################################
+        pos = self.ur3_default_dof_pos_mid.unsqueeze(0) + torch.cat([rand_pos , rand_rot], dim=-1)
+        ###############################################################################################################
 
         # with limit
         # pos = tensor_clamp(
