@@ -23,7 +23,7 @@ class DoorHook(VecTask):
 
         self.cfg = cfg
         self.n = 0
-        self.max_episode_length = 150 # 300 dataset 1
+        self.max_episode_length = 300 # 300 dataset 1
 
         self.door_scale_param = 0.2
 
@@ -523,8 +523,8 @@ def compute_ur3_reward(
     # print(hand_dist)
     hand_dist_thresh = torch.where(hand_dist < 0.15, torch.zeros_like(hand_dist), hand_dist)
 
-    # dist_reward = -1 * hand_dist * dist_reward_scale
-    dist_reward = -1 * hand_dist_thresh * dist_reward_scale
+    dist_reward = -1 * hand_dist * dist_reward_scale
+    # dist_reward = -1 * hand_dist_thresh * dist_reward_scale
     # dist_reward_no_thresh = -1 * (hand_dist + torch.log(hand_dist + 0.005)) * dist_reward_scale
 
 
