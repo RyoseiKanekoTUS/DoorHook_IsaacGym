@@ -25,7 +25,7 @@ class DoorHook(VecTask):
         self.n = 0
         self.max_episode_length = 300 # 300
 
-        self.door_scale_param = 0.1
+        self.door_scale_param = 0.1 # 0.1
 
         self.action_scale = 1.5
         self.start_pos_noise_scale =  0.5
@@ -54,7 +54,7 @@ class DoorHook(VecTask):
         self.camera_props = gymapi.CameraProperties()
         self.camera_props.width = 64
         self.camera_props.height = 48
-        self.depth_min = -3.0
+        self.depth_min = -0.5
         self.depth_max = -0.07
 
         self.camera_props.enable_tensors = True # If False, d_img process doesnt work  
