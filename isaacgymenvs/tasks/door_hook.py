@@ -54,7 +54,7 @@ class DoorHook(VecTask):
         self.camera_props = gymapi.CameraProperties()
         self.camera_props.width = 64
         self.camera_props.height = 48
-        self.depth_min = -0.5
+        self.depth_min = -3.0
         self.depth_max = -0.07
 
         self.camera_props.enable_tensors = True # If False, d_img process doesnt work  
@@ -128,7 +128,8 @@ class DoorHook(VecTask):
 
         asset_root = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../../assets')
         ur3_asset_file = "urdf/door_test/hook_test.urdf"
-        door_1_asset_file = 'urdf/door_test/door_1_wall.urdf'
+        # door_1_asset_file = 'urdf/door_test/door_1_wall.urdf'
+        door_1_asset_file = 'urdf/door_test/v3_door_left_1.urdf'
         door_2_asset_file = 'urdf/door_test/door_2_wall.urdf'
         door_1_inv_asset_file = 'urdf/door_test/door_1_inv_wall_2.urdf'
         door_2_inv_asset_file = 'urdf/door_test/door_2_inv_wall_2.urdf'
@@ -145,7 +146,7 @@ class DoorHook(VecTask):
         vh_options.max_convex_hulls = 10000
         asset_options.convex_decomposition_from_submeshes = True
         asset_options.disable_gravity = True
-        asset_options.thickness = 0.1
+        asset_options.thickness = 0.01
         asset_options.default_dof_drive_mode = gymapi.DOF_MODE_POS
         asset_options.use_mesh_materials = True
         ur3_asset = self.gym.load_asset(self.sim, asset_root, ur3_asset_file, asset_options)
@@ -154,6 +155,10 @@ class DoorHook(VecTask):
         asset_options.flip_visual_attachments = False
         asset_options.collapse_fixed_joints = True
         asset_options.disable_gravity = False
+        asset_options.vhacd_enabled = True # if True, accurate collision enabled
+        vh_options.max_convex_hulls = 1000000
+        asset_options.convex_decomposition_from_submeshes = True
+
         asset_options.default_dof_drive_mode = gymapi.DOF_MODE_NONE
         asset_options.armature = 0.005
         door_1_asset = self.gym.load_asset(self.sim, asset_root, door_1_asset_file, asset_options)

@@ -10,30 +10,36 @@
         
     <joint name = 'base_joint' type = 'fixed'>
         <parent link = 'base_link'/>
-        <origin xyz = '0 -0.5 0.0' rpy='0 0 0'/>
+        <origin xyz = '0 0.5 0.0' rpy='0 0 3.14159'/>
         <!-- if move y : the door will slide -->
-        <child link = 'door_frame'/>
+        <child link = 'door_wall'/>
     </joint>
 
-    <link name = 'door_frame'>
+    <link name = 'door_wall'>
         <visual>
             <geometry>
-                <mesh filename = './meshes/frame.dae'/>
+                <box size='0.08 1.5 2.04'/>
             </geometry>
-            <origin xyz = '0 0 0' rpy = '1.57 0 0'/>
-            <!-- <color rgba = '0.5 0.5 0.5 1.0'/> -->
+            <origin xyz = '0 -0.67 1.02' rpy = '0 0 0'/>
         </visual>
-        <!-- <collision name = "door frame_collision">
+        <visual>
             <geometry>
-                <mesh filename = './meshes/frame.dae'/>
-                <origin xyz = '0.5 0 0' rpy = '1.57 0 0'/>
+                <box size='0.08 1.5 2.04'/>
             </geometry>
-        </collision> -->
+            <origin xyz = '0 1.74 1.02' rpy = '0 0 0'/>
+        </visual>
+        <visual>
+            <geometry>
+                <box size='0.08 3.91 0.3'/>
+            </geometry>
+            <origin xyz = '0 0.532 2.19' rpy = '0 0 0'/>
+        </visual>
+
         <collision name="side_1_:hinge_side">
             <geometry>
-                <box size = '0.05029 0.06858 2.10820'/>
+                <box size='0.08 1.5 2.04'/>
             </geometry>
-            <origin xyz = '-0.02 0.02 1.05' rpy = '0 0 0'/>
+            <origin xyz = '0 -0.67 1.02' rpy = '0 0 0'/>
         </collision>
         <collision name="side_2">
             <geometry>
@@ -41,11 +47,17 @@
             </geometry>
             <origin xyz="-0.02 1.02 1.05" rpy="0 0 0"/>
         </collision>
+        <collision>
+            <geometry>
+                <box size='0.08 1.5 2.04'/>
+            </geometry>
+            <origin xyz = '0 1.8 1.02' rpy = '0 0 0'/>
+        </collision>
         <collision name="top">
             <geometry>
-                <box size = '0.05029 0.92964 0.07366'/>
+                <box size='0.08 3.91 0.3'/>
             </geometry>
-            <origin xyz="-0.02 0.52 2.05820" rpy="0 0 0"/>
+            <origin xyz = '0 0.532 2.19' rpy = '0 0 0'/>
         </collision>
         <inertial>
             <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -55,11 +67,11 @@
     </link>
 
     <joint name = 'door_hinge' type = 'revolute'>
-        <axis xyz = '0 0 1' rpy = '0 0 0'/>
-        <origin xyz = '0.025 0.06858 0' rpy='0 3.14159 0'/>
-        <limit lower = '0' upper = '1.57' effort='100' velocity="100.00"/>
-        <dynamics damping="10.0" friction="0.0"/>
-        <parent link = 'door_frame'/>
+        <axis xyz = '0 0 1' rpy = '0 0 0 '/>
+        <origin xyz = '-0.07 0.06858 2.040'/>
+        <limit lower = '0' upper = '1.57' effort='10000' velocity="100.00"/>
+        <dynamics damping="25.0" friction="0.0"/>
+        <parent link = 'door_wall'/>
         <child link = 'door'/>
     </joint>
 
@@ -85,41 +97,41 @@
     </link>
 
     <joint name = 'door_handle' type = 'revolute'>
-        <axis xyz = '-1 0 0' rpy = '0 0 0 '/>
+        <axis xyz = '1 0 0' rpy = '0 0 0 '/>
         <parent link = 'door'/>
-        <origin xyz = '0.035 0.75 -1.0'/>
+        <origin xyz = '0.035 0.75 -1.02'/>
         <limit lower = '0' upper = '0.5236' effort='100' velocity="1000.00"/>
-        <dynamics damping="0.0" friction="0.0"/>
+        <dynamics damping="0.01" friction="0.0"/>
         <child link = 'door_handles'/>
     </joint>
 
     <link name = 'door_handles'>
         <visual>
             <geometry>
-                <mesh filename = './meshes/door_handle.dae'/>
+                <mesh filename = './meshes/with_plate.dae' scale='0.04 0.04 0.04'/>
             </geometry>
-            <origin xyz = '0 0 0' rpy = '0 3.141592 1.57'/>
+            <origin xyz = '0 0 0' rpy = '-1.57 3.141592 0'/>
             <color rgba = '0.55 0.5 0.5 1.0'/>
         </visual>
-        <visual>
+        <!-- <visual>
             <geometry>
-                <mesh filename = './meshes/door_handle.dae'/>
+                <mesh filename = './meshes/with_plate.dae' scale='0.04 0.04 0.04'/>
             </geometry>
             <origin xyz = '0.04 0 0' rpy = '0 0 -1.57'/>
              <color rgba = '0.5 0.5 0.5 1.0'/>
-        </visual>
+        </visual> -->
         <collision name="door_handles_collision">
             <geometry>
-                <mesh filename="./meshes/door_handle.dae"/>
+                <mesh filename="./meshes/with_plate_collision.dae" scale='0.04 0.04 0.04'/>
             </geometry>
-            <origin xyz = '0 0 0' rpy = '0 3.141592 1.57'/>
+            <origin xyz = '0 0 0' rpy = '-1.57 3.141592 0'/>
         </collision>
-        <collision name="door_handles_collision">
+        <!-- <collision name="door_handles_collision">
             <geometry>
-                <mesh filename="./meshes/door_handle.dae"/>
+                <mesh filename="./meshes/with_plate_collision.dae" scale='0.04 0.04 0.04'/>
             </geometry>
             <origin xyz = '0.045 0 0' rpy = '0 0 -1.57'/>
-        </collision>
+        </collision> -->
         <inertial>
             <origin xyz="0.0 0.0 0.0" rpy="3.14159 0 1.57"/>
             <mass value="1.0"/>
