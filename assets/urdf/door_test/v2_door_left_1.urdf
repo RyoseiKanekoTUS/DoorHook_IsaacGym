@@ -99,7 +99,7 @@
     <joint name = 'door_handle' type = 'revolute'>
         <axis xyz = '1 0 0' rpy = '0 0 0 '/>
         <parent link = 'door'/>
-        <origin xyz = '0.035 0.6 -1.35'/>
+        <origin xyz = '0.035 0.7 -1.25'/>
         <limit lower = '0' upper = '0.5236' effort='100' velocity="1000.00"/>
         <dynamics damping="0.01" friction="0.0"/>
         <child link = 'door_handles'/>
@@ -108,30 +108,30 @@
     <link name = 'door_handles'>
         <visual>
             <geometry>
-                <mesh filename = './meshes/DH-02201.dae' scale='1.0 1.0 1.0'/>
+                <mesh filename = './meshes/DH-02201.dae' scale='1.25 1.25 1.25'/>
             </geometry>
             <origin xyz = '0 0 0' rpy = '-1.57 3.141592 1.57'/>
             <color rgba = '0.55 0.5 0.5 1.0'/>
         </visual>
-        <visual>
+        <!-- <visual>
             <geometry>
                 <mesh filename = './meshes/DH-02201.dae' scale='1.0 1.0 1.0'/>
             </geometry>
             <origin xyz = '0.04 0 0' rpy = '0 0 -1.57'/>
              <color rgba = '0.5 0.5 0.5 1.0'/>
-        </visual>
+        </visual> -->
         <collision name="door_handles_collision">
             <geometry>
-                <mesh filename="./meshes/DH-02201_collision.dae" scale='1.0 1.0 1.0'/>
+                <mesh filename="./meshes/DH-02201_collision.dae" scale='1.25 1.25 1.25'/>
             </geometry>
             <origin xyz = '0 0 0' rpy = '-1.57 3.141592 1.57'/>
         </collision>
-        <collision name="door_handles_collision">
+        <!-- <collision name="door_handles_collision">
             <geometry>
                 <mesh filename="./meshes/DH-02201_collision.dae" scale='1.0 1.0 1.0'/>
             </geometry>
             <origin xyz = '0.045 0 0' rpy = '0 0 -1.57'/>
-        </collision>
+        </collision> -->
         <inertial>
             <origin xyz="0.0 0.0 0.0" rpy="3.14159 0 1.57"/>
             <mass value="1.0"/>

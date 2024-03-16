@@ -129,8 +129,8 @@ class DoorHook(VecTask):
         asset_root = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../../assets')
         ur3_asset_file = "urdf/door_test/hook_test.urdf"
         # door_1_asset_file = 'urdf/door_test/door_1_wall.urdf'
-        door_1_asset_file = 'urdf/door_test/door_1_wall.urdf'
-        door_2_asset_file = 'urdf/door_test/v2_door_left_1.urdf'
+        door_2_asset_file = 'urdf/door_test/door_1_wall.urdf'
+        door_1_asset_file = 'urdf/door_test/v3_door_left_1.urdf'
         door_1_inv_asset_file = 'urdf/door_test/v3_door_left_1.urdf'
         door_2_inv_asset_file = 'urdf/door_test/v4_door_left_1.urdf'
 
@@ -161,7 +161,7 @@ class DoorHook(VecTask):
         asset_options.collapse_fixed_joints = True
         asset_options.disable_gravity = False
         asset_options.vhacd_enabled = True # if True, accurate collision enabled
-        vh_options.max_convex_hulls = 1000000
+        vh_options.max_convex_hulls = 100000
         asset_options.convex_decomposition_from_submeshes = True
 
         asset_options.default_dof_drive_mode = gymapi.DOF_MODE_NONE
@@ -368,7 +368,7 @@ class DoorHook(VecTask):
                                         (torch.max(self.th_n_d_imgs[i,...])-torch.min(self.th_n_d_imgs[i,...]) + 1e-12) 
                                         for i in range(self.num_envs)])
         # print('silh',torch.max(self.silh_d_imgs), torch.min(self.silh_d_imgs))
-        # print('silh all', self.silh_d_imgs)
+        # print('silh all', self.silhhand_o_dist_d_imgs)
 
         self.pp_d_imgs = 0.5*(self.th_n_d_imgs + self.silh_d_imgs)
         # print('pp',torch.max(self.pp_d_imgs), torch.min(self.pp_d_imgs))
