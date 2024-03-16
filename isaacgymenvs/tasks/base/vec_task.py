@@ -526,11 +526,13 @@ class VecTask(Env):
             else:
                 self.gym.poll_viewer_events(self.viewer)
 
-            if self.record_frames:
-                if not os.path.isdir(self.record_frames_dir):
-                    os.makedirs(self.record_frames_dir, exist_ok=True)
+            # recording_frames #####################################################################################################
+            if not os.path.isdir(self.record_frames_dir):
+                os.makedirs(self.record_frames_dir, exist_ok=True)
 
-                self.gym.write_viewer_image_to_file(self.viewer, join(self.record_frames_dir, f"frame_{self.control_steps}.png"))
+            self.gym.write_viewer_image_to_file(self.viewer, join(self.record_frames_dir, f"frame_{self.control_steps}.png"))
+
+            # ########################################################################################################################
 
             if self.virtual_display and mode == "rgb_array":
                 img = self.virtual_display.grab()
