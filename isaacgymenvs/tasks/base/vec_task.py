@@ -303,8 +303,8 @@ class VecTask(Env):
             # self.gym.viewer_camera_look_at(self.viewer, None, gymapi.Vec3(5.5, 1.55, 5), gymapi.Vec3(0.5, 1.55, -1.2))
         # ########################################################################################################
         # type1 door ##############################################################################################
-            # self.gym.viewer_camera_look_at(self.viewer, None, gymapi.Vec3(1.0, 1.0, 1.5), gymapi.Vec3(0, -0.2, 0.85))
-            self.gym.viewer_camera_look_at(self.viewer, None, gymapi.Vec3(1.0, -0.75, 1.3), gymapi.Vec3(0, -0.2, 0.85))
+            self.gym.viewer_camera_look_at(self.viewer, None, gymapi.Vec3(1.0, 1.0, 1.5), gymapi.Vec3(0, -0.2, 0.85))
+            # self.gym.viewer_camera_look_at(self.viewer, None, gymapi.Vec3(1.0, -0.75, 1.3), gymapi.Vec3(0, -0.2, 0.85))
         # ########################################################################################################
         # # type3 doors ##############################################################################################
             # self.gym.viewer_camera_look_at(self.viewer, None, gymapi.Vec3(1.0, 2.5, 1.5), gymapi.Vec3(0, 3.0, 1.0))
@@ -526,13 +526,13 @@ class VecTask(Env):
             else:
                 self.gym.poll_viewer_events(self.viewer)
 
-            # recording_frames #####################################################################################################
-            if not os.path.isdir(self.record_frames_dir):
-                os.makedirs(self.record_frames_dir, exist_ok=True)
+            # # recording_frames #####################################################################################################
+            # if not os.path.isdir(self.record_frames_dir):
+            #     os.makedirs(self.record_frames_dir, exist_ok=True)
 
-            self.gym.write_viewer_image_to_file(self.viewer, join(self.record_frames_dir, f"frame_{self.control_steps}.png"))
+            # self.gym.write_viewer_image_to_file(self.viewer, join(self.record_frames_dir, f"frame_{self.control_steps}.png"))
 
-            # ########################################################################################################################
+            # # ########################################################################################################################
 
             if self.virtual_display and mode == "rgb_array":
                 img = self.virtual_display.grab()
