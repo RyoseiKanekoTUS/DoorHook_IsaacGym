@@ -87,7 +87,7 @@
             <geometry>
                 <mesh filename = './meshes/v5_plate.dae' scale='0.04 0.04 0.04'/>
             </geometry>
-            <origin xyz = '0.035 0.75 -1.02' rpy = '-1.57 0 3.14159'/>
+            <origin xyz = '0.03 0.75 -1.02' rpy = '-1.57 0 3.14159'/>
             <color rgba = '0.5 0.5 0.5 1.0'/>
         </visual>
         <collision name="door_collision">
@@ -117,7 +117,7 @@
             <geometry>
                 <mesh filename = './meshes/v5_handle.dae' scale='0.04 0.04 0.04'/>
             </geometry>
-            <origin xyz = '0 0 0' rpy = '-1.57 3.141592 0'/>
+            <origin xyz = '-0.0025 0 0' rpy = '-1.57 3.141592 0'/>
             <color rgba = '0.55 0.5 0.5 1.0'/>
         </visual>
         <!-- <visual>
@@ -131,7 +131,7 @@
             <geometry>
                 <mesh filename="./meshes/v5.stl" scale='0.04 0.04 0.04'/>
             </geometry>
-            <origin xyz = '0 0 0' rpy = '-3.14159 3.141592 0'/>
+            <origin xyz = '-0.0025 0 0' rpy = '-3.14159 3.141592 0'/>
         </collision>
         <!-- <collision name="door_handles_collision">
             <geometry>
